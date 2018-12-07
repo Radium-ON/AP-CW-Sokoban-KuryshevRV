@@ -5,8 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AP_CW_Sokoban_KuryshevRV"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Лабиринт - Уровень" Height="450" Width="600" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ToolBar x:Name="toolBar" MinHeight="30" VerticalAlignment="Top" Background="White" UseLayoutRounding="False" IsHitTestVisible="True" Grid.ColumnSpan="2">
+            <Label Content="Уровень № "/>
+            <Label x:Name="levelNumberLevel"/>
+            <Separator/>
+            <Label Content="Ящиков на местах:"/>
+            <Label x:Name="labelStat" Content="0 из 5"/>
+            <Button x:Name="buttonPreviousLevel" Click="buttonPreviousLevel_Click">
+                <Image Width="30" Height="30" Source="pack://siteoforigin:,,,/Resources/arrow-left.png" Stretch="UniformToFill"/>
+            </Button>
+            <Button x:Name="buttonNextLevel" Click="buttonNextLevel_Click">
+                <Image Width="30" Height="30" Source="pack://siteoforigin:,,,/Resources/arrow-right.png" Stretch="UniformToFill"/>
+            </Button>
+            <Button x:Name="buttonRestartLevel" Click="buttonRestartLevel_Click">
+                <Image Width="30" Height="30" Source="Resources/restart.png" Stretch="UniformToFill"/>
+            </Button>
+        </ToolBar>
+        <Canvas x:Name="panel1" Grid.ColumnSpan="2" Margin="0,42,-0.4,0.2" Grid.RowSpan="2"/>
+        <Border MouseLeftButtonDown="Border_MouseLeftButtonDown" MouseRightButtonDown="Border_MouseRightButtonDown" Grid.ColumnSpan="2" Margin="0,0,-0.4,0.4"/>
     </Grid>
 </Window>
