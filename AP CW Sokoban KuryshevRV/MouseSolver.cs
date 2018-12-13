@@ -107,7 +107,5 @@ namespace AP_CW_Sokoban_KuryshevRV
                 return true;
             return false;
         }
-    }
-    {
-    }
+    }    
 }

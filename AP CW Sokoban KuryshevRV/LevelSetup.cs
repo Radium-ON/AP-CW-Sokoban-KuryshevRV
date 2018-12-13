@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace AP_CW_Sokoban_KuryshevRV
     public class LevelSetup
     {
         static string mFilename = "LevelList.txt";
-        int mLevelSizeNew = 8;
+        //int mLevelSizeNew = 8;
         public LevelSetup()
         {
 

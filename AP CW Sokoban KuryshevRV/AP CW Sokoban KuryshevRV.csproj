@@ -59,7 +59,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="StartMenuWindow.xaml.cs">
+      <DependentUpon>StartMenuWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="LabirintWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -70,10 +73,14 @@
     <Compile Include="BoxSolver.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="LevelSetup.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="LabirintWindow.xaml.cs">
+      <DependentUpon>LabirintWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="StartMenuWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MouseSolver.cs" />

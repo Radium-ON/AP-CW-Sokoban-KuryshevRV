@@ -22,21 +22,20 @@ namespace AP_CW_Sokoban_KuryshevRV
     //делегат доступа игры к полям статистики
     public delegate void delegateShowStats(int placed, int totals);
 
-    public partial class MainWindow : Window
+    public partial class LabirintWindow : Window
     {
         int currentLevelNumber;
         int mLastLevel;//последний непройденный уровень
         int labirintWidth, labirintHeight;
-        PictureBox[,] pictureBoxes;
+        Image[,] pictureBoxes;//PictureBox->image
 
         Game game;
-
         string path_target = "";//куда пойдет чел по тикам таймера
 
-        public MainWindow()
+        public LabirintWindow()
         {
             InitializeComponent();
-            mLastLevel = 1;//доступный 1 уровень в начале игры
+            mLastLevel = 12;//доступный 1 уровень в начале игры
             game = new Game(ShowItem, ShowStats);
 
             DispatcherTimer timer = new DispatcherTimer()
@@ -44,7 +43,7 @@ namespace AP_CW_Sokoban_KuryshevRV
                 Interval = new TimeSpan(0, 0, 1)
             };
             timer.Tick += new EventHandler(timer_Tick);
-            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Interval = TimeSpan.FromMilliseconds(100);
             timer.Start();
         }
 
@@ -57,7 +56,7 @@ namespace AP_CW_Sokoban_KuryshevRV
             if (!game.InitializeLevel(levelN, out labirintWidth, out labirintHeight))
             {
                 MessageBox.Show("Вы прошли все уровни! Так держать!");
-                DialogResult = DialogResult.OK;
+                DialogResult = true;
                 return;
             }
             ;
@@ -68,28 +67,27 @@ namespace AP_CW_Sokoban_KuryshevRV
         //делегированные методы
         public void ShowItem(MapPlace place, Cell item)
         {
-            pictureBoxes[place.X, place.Y].Image = CellToPicture(item);
+            pictureBoxes[place.X, place.Y].Source = new BitmapImage(CellToPicture(item));
         }
 
-        private Image CellToPicture(Cell item)
+        private Uri CellToPicture(Cell item)//Image->URI ??
         {
             switch (item)
             {
-                case Cell.none: return Properties.Resources.none;
-                case Cell.wall:
- return Properties.Resources.wall;
-                case Cell.box: return Properties.Resources.dropbox;
-                case Cell.here: return Properties.Resources.checkbox_blank_outline;
-                case Cell.done: return Properties.Resources.check_circle_outline;
-                case Cell.user: return Properties.Resources.account_black;
-                default: return Properties.Resources.none;
+                case Cell.none: return new Uri(@"pack://siteoforigin:,,,/Resources/none.png");
+                case Cell.wall: return new Uri(@"pack://siteoforigin:,,,/Resources/wall.png");
+                case Cell.box: return new Uri(@"pack://siteoforigin:,,,/Resources/dropbox.png");
+                case Cell.here: return new Uri(@"pack://siteoforigin:,,,/Resources/checkbox-blank-outline.png");
+                case Cell.done: return new Uri(@"pack://siteoforigin:,,,/Resources/check-circle-outline.png");
+                case Cell.user: return new Uri(@"pack://siteoforigin:,,,/Resources/user-black.png");
+                default: return new Uri(@"pack://siteoforigin:,,,/Resources/none.png");
             }
         }
 
         public void ShowStats(int placed, int totals)
         {
-            toolStat.Text = placed.ToString() + " из " + totals.ToString();
-            levelNumberLabel.Text = currentLevelNumber.ToString();//показать номер уровня
+            labelStat.Content = placed.ToString() + " из " + totals.ToString();
+            levelNumberLevel.Content = currentLevelNumber.ToString();//показать номер уровня
             if (placed == totals)
             {
                 //если прошли уровень:вернуться назад и вперед до непройденного
@@ -102,35 +100,41 @@ namespace AP_CW_Sokoban_KuryshevRV
 
         public void InitPictureBoxes(int width, int height)
         {
-            pictureBoxes = new PictureBox[width, height];
+            pictureBoxes = new Image[width, height];
             //размеры бокса пропорциональны размерам панели
-            int pictureBoxHeight = panel1.Height / height;
-            int pictureBoxWidth = panel1.Width / width;
+            //int canvasHeight = Convert.ToInt32(gridGame.Height);
+            //int canvasWidth = Convert.ToInt32(gridGame.Width);
+            //int pictureBoxHeight = (int)gridGame.ActualHeight / height;//Canvas.Height (double)->int
+            //int pictureBoxWidth = (int) gridGame.ActualWidth/ width;
             //боксы квадратные = должны быть равны ширина и длина
-            if (pictureBoxWidth < pictureBoxHeight)
-            {
-                pictureBoxHeight = pictureBoxWidth;
-            }
-            else
-            {
-                pictureBoxWidth = pictureBoxHeight;
-            }
-            panel1.Children.Clear();
+            //if (pictureBoxWidth < pictureBoxHeight)
+            //{
+            //    pictureBoxHeight = pictureBoxWidth;
+            //}
+            //else
+            //{
+            //    pictureBoxWidth = pictureBoxHeight;
+            //}
+            gridGame.Children.Clear();
+            gridGame.RowDefinitions.Clear();
+            gridGame.ColumnDefinitions.Clear();
             for (int x = 0; x < width; x++)
             {
+                gridGame.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
                 for (int y = 0; y < height; y++)
                 {
-                    PictureBox pic = new PictureBox();
-                    pic.BackColor = Color.White;
-                    pic.BorderStyle = BorderStyle.FixedSingle;
-                    pic.Location = new Point(x * (pictureBoxWidth - 1), y * (pictureBoxHeight - 1));
-                    pic.Size = new Size(pictureBoxWidth, pictureBoxHeight);
-                    pic.SizeMode = PictureBoxSizeMode.StretchImage;
-                    pic.MouseClick += new MouseEventHandler(pictureBox_MouseClick);
-                    pic.MouseDoubleClick += new MouseEventHandler(picturebox_MouseDoubleClick);
-                    //запись координат в тэг ячейки
-                    pic.Tag = new MapPlace(x, y);
-                    panel1.Children.Add(pic);
+                    gridGame.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+                    Image pic = new Image()
+                    {
+                        Stretch = Stretch.UniformToFill,
+                        //запись координат в тэг ячейки
+                        Tag = new MapPlace(x, y),
+                    };
+                    pic.MouseLeftButtonDown += new MouseButtonEventHandler(pictureBox_MouseLeftButtonDown);
+                    pic.MouseRightButtonDown += new MouseButtonEventHandler(pictureBox_MouseRightButtonDown);
+                    Grid.SetRow(pic, y);
+                    Grid.SetColumn(pic, x);
+                    gridGame.Children.Add(pic);
                     pictureBoxes[x, y] = pic;
                 }
             }
@@ -159,34 +163,9 @@ namespace AP_CW_Sokoban_KuryshevRV
                 path_target = path_target.Substring(1);
         }
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void pictureBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (pictureBoxes != null)
-            {
-                int pictureBoxHeight = panel1.Height / labirintHeight;
-                int pictureBoxWidth = panel1.Width / labirintWidth;
-                if (pictureBoxWidth < pictureBoxHeight)
-                {
-                    pictureBoxHeight = pictureBoxWidth;
-                }
-                else
-                {
-                    pictureBoxWidth = pictureBoxHeight;
-                }
-                for (int x = 0; x < labirintWidth; x++)
-                {
-                    for (int y = 0; y < labirintHeight; y++)
-                    {
-                        pictureBoxes[x, y].Location = new Point(x * (pictureBoxWidth - 1), y * (pictureBoxHeight - 1));
-                        pictureBoxes[x, y].Size = new Size(pictureBoxWidth, pictureBoxHeight);
-                    }
-                }
-            }
-        }
-
-        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            MapPlace place = (MapPlace)((PictureBox)sender).Tag;
+            MapPlace place = (MapPlace)((Image)sender).Tag;
             string my_path = "";
             if (box.X == -1)
             {//если не выбран ящик - просто идём
@@ -203,9 +182,9 @@ namespace AP_CW_Sokoban_KuryshevRV
 
         MapPlace box = new MapPlace(-1, -1);//не указан ящик
 
-        private void Border_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void pictureBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            box = (MapPlace)((PictureBox)sender).Tag;
+            box = (MapPlace)((Image)sender).Tag;
         }
 
         private void buttonPreviousLevel_Click(object sender, RoutedEventArgs e)
@@ -226,7 +205,7 @@ namespace AP_CW_Sokoban_KuryshevRV
             RestartLevel();
         }
 
-        private static void RestartLevel()
+        private void RestartLevel()
         {
             game.InitializeLevel(currentLevelNumber, out labirintWidth, out labirintHeight);
             game.ShowLevel();
@@ -236,6 +215,7 @@ namespace AP_CW_Sokoban_KuryshevRV
         {
             labirintWidth = pictureBoxes.GetLength(0);
             labirintHeight = pictureBoxes.GetLength(1);
+
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
