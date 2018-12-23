@@ -103,10 +103,10 @@ namespace AP_CW_Sokoban_KuryshevRV
             {
                 case Cell.none: return new Uri(@"pack://siteoforigin:,,,/Resources/none.png");
                 case Cell.wall: return new Uri(@"pack://siteoforigin:,,,/Resources/wall.png");
-                case Cell.box: return new Uri(@"pack://siteoforigin:,,,/Resources/dropbox.png");
-                case Cell.here: return new Uri(@"pack://siteoforigin:,,,/Resources/checkbox-blank-outline.png");
-                case Cell.done: return new Uri(@"pack://siteoforigin:,,,/Resources/check-circle-outline.png");
-                case Cell.user: return new Uri(@"pack://siteoforigin:,,,/Resources/user-black.png");
+                case Cell.box: return new Uri(@"pack://siteoforigin:,,,/Resources/box.png");
+                case Cell.here: return new Uri(@"pack://siteoforigin:,,,/Resources/checkbox_blank_outline.png");
+                case Cell.done: return new Uri(@"pack://siteoforigin:,,,/Resources/checkbox_marked_outline.png");
+                case Cell.user: return new Uri(@"pack://siteoforigin:,,,/Resources/user_black.png");
                 default: return new Uri(@"pack://siteoforigin:,,,/Resources/none.png");
             }
         }

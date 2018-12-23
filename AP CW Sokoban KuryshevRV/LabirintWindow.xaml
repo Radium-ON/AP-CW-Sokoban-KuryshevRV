@@ -18,10 +18,10 @@
             <Label Content="Ящиков на местах:"/>
             <Label x:Name="labelStat" Content="0 из 5"/>
             <Button x:Name="buttonPreviousLevel" Click="buttonPreviousLevel_Click">
-                <Image Width="30" Height="30" Source="pack://siteoforigin:,,,/Resources/arrow-left.png" Stretch="UniformToFill"/>
+                <Image Width="30" Height="30" Source="pack://siteoforigin:,,,/Resources/arrow_left.png" Stretch="UniformToFill"/>
             </Button>
             <Button x:Name="buttonNextLevel" Click="buttonNextLevel_Click">
-                <Image Width="30" Height="30" Source="pack://siteoforigin:,,,/Resources/arrow-right.png" Stretch="UniformToFill"/>
+                <Image Width="30" Height="30" Source="pack://siteoforigin:,,,/Resources/arrow_right.png" Stretch="UniformToFill"/>
             </Button>
             <Button x:Name="buttonRestartLevel" Click="buttonRestartLevel_Click">
                 <Image Width="30" Height="30" Source="pack://siteoforigin:,,,/Resources/restart.png" Stretch="UniformToFill"/>

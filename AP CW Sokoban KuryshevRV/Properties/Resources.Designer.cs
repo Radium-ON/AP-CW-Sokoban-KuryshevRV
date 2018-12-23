@@ -63,16 +63,6 @@ namespace AP_CW_Sokoban_KuryshevRV.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap account_black {
-            get {
-                object obj = ResourceManager.GetObject("account_black", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap arrow_left {
             get {
                 object obj = ResourceManager.GetObject("arrow_left", resourceCulture);
@@ -93,9 +83,9 @@ namespace AP_CW_Sokoban_KuryshevRV.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap check_circle_outline {
+        internal static System.Drawing.Bitmap box {
             get {
-                object obj = ResourceManager.GetObject("check_circle_outline", resourceCulture);
+                object obj = ResourceManager.GetObject("box", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +103,9 @@ namespace AP_CW_Sokoban_KuryshevRV.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap dropbox {
+        internal static System.Drawing.Bitmap checkbox_marked_outline {
             get {
-                object obj = ResourceManager.GetObject("dropbox", resourceCulture);
+                object obj = ResourceManager.GetObject("checkbox_marked_outline", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -174,6 +164,16 @@ namespace AP_CW_Sokoban_KuryshevRV.Properties {
         internal static string String1 {
             get {
                 return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap user_black {
+            get {
+                object obj = ResourceManager.GetObject("user_black", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
