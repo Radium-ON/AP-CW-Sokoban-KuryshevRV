@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AP_CW_Sokoban_KuryshevRV"
         mc:Ignorable="d" Name="labirintWindow"
-        Title="Лабиринт - Уровень" Height="800" Width="900" Loaded="Window_Loaded" KeyDown="Window_KeyDown" Closing="labirintWindow_Closing" WindowStartupLocation="CenterOwner">
+        Title="Лабиринт - Уровень" Height="800" Width="740" Loaded="Window_Loaded" KeyDown="Window_KeyDown" Closing="labirintWindow_Closing" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -32,6 +32,7 @@
             <Label>Попытки:</Label>
             <Label x:Name="lbAttempt" Content="{Binding AttemptNum, Mode=OneWay}"/>
         </ToolBar>
-        <Grid Grid.Row="1" MaxHeight="1200" x:Name="gridGame"/>
+        <Grid x:Name="gridGame" Grid.Row="1" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=Size.ActualHeight}" 
+              Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=Size.ActualHeigh}"/>
     </Grid>
 </Window>

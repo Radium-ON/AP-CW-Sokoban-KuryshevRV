@@ -140,10 +140,10 @@ namespace AP_CW_Sokoban_KuryshevRV
             gridGame.ColumnDefinitions.Clear();
             for (int x = 0; x < width; x++)
             {
-                gridGame.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
+                gridGame.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1,GridUnitType.Star) });
                 for (int y = 0; y < height; y++)
                 {
-                    gridGame.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+                    gridGame.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
                     Image pic = new Image()
                     {
                         Stretch = Stretch.UniformToFill,
