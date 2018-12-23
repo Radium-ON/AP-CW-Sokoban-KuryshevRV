@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,65 +15,89 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 using System.Windows.Threading;
+using System.Xml.Serialization;
 using static AP_CW_Sokoban_KuryshevRV.App;
+using System.Runtime.CompilerServices;
 
 namespace AP_CW_Sokoban_KuryshevRV
 {
     //делегат для обращения игрового метода к ячейкам
     public delegate void delegateShowItem(MapPlace place, Cell item);
     //делегат доступа игры к полям статистики
-    public delegate void delegateShowStats(int placed, int totals);
+    public delegate void delegateShowStats(int placed, int totals, int steps);
 
     public partial class LabirintWindow : Window
     {
         int currentLevelNumber;
         int mLastLevel;//последний непройденный уровень
         int labirintWidth, labirintHeight;
-        Image[,] pictureBoxes;//PictureBox->image
+        Image[,] pictureBoxes;
+
+        public User user;
+        //string mUserName;
+        int mSteps;
 
         Game game;
         string path_target = "";//куда пойдет чел по тикам таймера
 
+        //SharpSerializer formatter;
+
         public LabirintWindow()
         {
             InitializeComponent();
-            mLastLevel = 12;//доступный 1 уровень в начале игры
+            mLastLevel = 1;//доступный 1 уровень в начале игры
             game = new Game(ShowItem, ShowStats);
-
+            labirintWindow.DataContext = game;
             DispatcherTimer timer = new DispatcherTimer()
             {
-                Interval = new TimeSpan(0, 0, 1)
+                Interval = TimeSpan.FromMilliseconds(100),
             };
             timer.Tick += new EventHandler(timer_Tick);
-            timer.Interval = TimeSpan.FromMilliseconds(100);
             timer.Start();
+            user = new User();
         }
 
-        public void OpenLevel(int levelN)
+        public LabirintWindow(List<User> users):this()
+        {
+            game.StepsNum = users.Last().datas.Last().StepsNum;
+            game.AttemptNum = users.Last().datas.Last().AttemptedCount;
+        }
+
+        public void OpenLevel(int levelN, string origFile)
         {
             if (levelN > mLastLevel)
                 return;//нельзя загрузить, если уровень не пройден
             currentLevelNumber = levelN;
+            OpenGame(levelN,mStartFilename);
+        }
 
-            if (!game.InitializeLevel(levelN, out labirintWidth, out labirintHeight))
+        public void OpenSavedLevel(int levelN, string save)
+        {
+            currentLevelNumber = mLastLevel = levelN;
+            OpenGame(levelN,mSaveFileName);
+        }
+
+        private void OpenGame(int levelN, string file)
+        {
+            if (!game.InitializeLevel(levelN, out labirintWidth, out labirintHeight, file))
             {
                 MessageBox.Show("Вы прошли все уровни! Так держать!");
                 DialogResult = true;
                 return;
-            }
-            ;
+            };
             InitPictureBoxes(labirintWidth, labirintHeight);
             game.ShowLevel();
         }
 
-        //делегированные методы
+        //делегированные методы: назначение ресурса на ячейку ImageBoxes
         public void ShowItem(MapPlace place, Cell item)
         {
             pictureBoxes[place.X, place.Y].Source = new BitmapImage(CellToPicture(item));
         }
 
-        private Uri CellToPicture(Cell item)//Image->URI ??
+        private Uri CellToPicture(Cell item)
         {
             switch (item)
             {
@@ -84,37 +111,30 @@ namespace AP_CW_Sokoban_KuryshevRV
             }
         }
 
-        public void ShowStats(int placed, int totals)
+        public void ShowStats(int placed, int totals, int steps)
         {
-            labelStat.Content = placed.ToString() + " из " + totals.ToString();
-            levelNumberLevel.Content = currentLevelNumber.ToString();//показать номер уровня
+            labelStat.Content = placed + " из " + totals;
+            levelNumberLevel.Content = currentLevelNumber;//показать номер уровня
+            lbStepsNum.Content = mSteps = steps;
             if (placed == totals)
             {
                 //если прошли уровень:вернуться назад и вперед до непройденного
                 if (currentLevelNumber == mLastLevel)
                     mLastLevel = currentLevelNumber + 1;
 
-                MessageBox.Show("Уровень пройден!");
+                var msg = "Уровень пройден!\nПродолжить?";
+                MessageBoxResult result = MessageBox.Show(msg, "Следующий уровень", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                if (result == MessageBoxResult.Yes)
+                {
+                    buttonNextLevel_Click(this, null);
+                }
             }
         }
 
         public void InitPictureBoxes(int width, int height)
         {
             pictureBoxes = new Image[width, height];
-            //размеры бокса пропорциональны размерам панели
-            //int canvasHeight = Convert.ToInt32(gridGame.Height);
-            //int canvasWidth = Convert.ToInt32(gridGame.Width);
-            //int pictureBoxHeight = (int)gridGame.ActualHeight / height;//Canvas.Height (double)->int
-            //int pictureBoxWidth = (int) gridGame.ActualWidth/ width;
-            //боксы квадратные = должны быть равны ширина и длина
-            //if (pictureBoxWidth < pictureBoxHeight)
-            //{
-            //    pictureBoxHeight = pictureBoxWidth;
-            //}
-            //else
-            //{
-            //    pictureBoxWidth = pictureBoxHeight;
-            //}
+            //int pictureBoxHeight = (int)gridGame.ActualHeight / height;         
             gridGame.Children.Clear();
             gridGame.RowDefinitions.Clear();
             gridGame.ColumnDefinitions.Clear();
@@ -130,8 +150,8 @@ namespace AP_CW_Sokoban_KuryshevRV
                         //запись координат в тэг ячейки
                         Tag = new MapPlace(x, y),
                     };
-                    pic.MouseLeftButtonDown += new MouseButtonEventHandler(pictureBox_MouseLeftButtonDown);
-                    pic.MouseRightButtonDown += new MouseButtonEventHandler(pictureBox_MouseRightButtonDown);
+                    pic.MouseLeftButtonDown += new MouseButtonEventHandler(ImageCell_MouseLeftButtonDown);
+                    pic.MouseRightButtonDown += new MouseButtonEventHandler(ImageCell_MouseRightButtonDown);
                     Grid.SetRow(pic, y);
                     Grid.SetColumn(pic, x);
                     gridGame.Children.Add(pic);
@@ -163,7 +183,7 @@ namespace AP_CW_Sokoban_KuryshevRV
                 path_target = path_target.Substring(1);
         }
 
-        private void pictureBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void ImageCell_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             MapPlace place = (MapPlace)((Image)sender).Tag;
             string my_path = "";
@@ -177,12 +197,12 @@ namespace AP_CW_Sokoban_KuryshevRV
                 box.X = -1;
                 box.Y = -1;
             }
-            path_target = my_path;//передали путь куда двигаться
+            path_target = my_path;//передали путь куда двигаться            
         }
 
         MapPlace box = new MapPlace(-1, -1);//не указан ящик
 
-        private void pictureBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void ImageCell_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             box = (MapPlace)((Image)sender).Tag;
         }
@@ -191,13 +211,16 @@ namespace AP_CW_Sokoban_KuryshevRV
         {
             if (currentLevelNumber > 1)
             {
-                OpenLevel(currentLevelNumber - 1);
+                OpenLevel(currentLevelNumber - 1, mStartFilename);
             }
         }
 
         private void buttonNextLevel_Click(object sender, RoutedEventArgs e)
         {
-            OpenLevel(currentLevelNumber + 1);
+            user.datas.Add(new User.UserData(game.AttemptNum, mSteps, currentLevelNumber));
+            game.AttemptNum = 1;
+            game.StepsNum = 0;
+            OpenLevel(currentLevelNumber + 1, mStartFilename);
         }
 
         private void buttonRestartLevel_Click(object sender, RoutedEventArgs e)
@@ -207,7 +230,9 @@ namespace AP_CW_Sokoban_KuryshevRV
 
         private void RestartLevel()
         {
-            game.InitializeLevel(currentLevelNumber, out labirintWidth, out labirintHeight);
+            game.AttemptNum++;
+            game.StepsNum = 0;
+            game.InitializeLevel(currentLevelNumber, out labirintWidth, out labirintHeight, mStartFilename);
             game.ShowLevel();
         }
 
@@ -216,6 +241,34 @@ namespace AP_CW_Sokoban_KuryshevRV
             labirintWidth = pictureBoxes.GetLength(0);
             labirintHeight = pictureBoxes.GetLength(1);
 
+        }
+
+        private void labirintWindow_Closing(object sender, CancelEventArgs e)
+        {
+            string msg = "Несохранённые данные. Сохранить и закрыть?";
+            MessageBoxResult result = MessageBox.Show(msg, "Завершение игры", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Cancel)
+            {
+                // Если пользователь не желает закрыть - отмена
+                e.Cancel = true;
+            }
+            if (result == MessageBoxResult.Yes)
+            {
+                // Закрыть игру и сохраниться
+                UserNameDialog nameDialog = new UserNameDialog();
+                nameDialog.Owner = this;
+                if (nameDialog.ShowDialog() == true)
+                {
+                    if (user.datas.Count==0)
+                    {
+                        user.datas.Add(new User.UserData(game.AttemptNum, mSteps, currentLevelNumber));
+                    }
+                    user.UserName = nameDialog.tbNameInput.Text;
+                    game.TopToMapReverse();
+                    LevelSetup.SaveLevel(currentLevelNumber, game.TopReverse, mSaveFileName);
+                    DialogResult = true;
+                }
+            }
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

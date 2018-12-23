@@ -8,22 +8,16 @@ using static AP_CW_Sokoban_KuryshevRV.App;
 
 namespace AP_CW_Sokoban_KuryshevRV
 {
-    public class LevelSetup
+    public static class LevelSetup
     {
-        static string mFilename = "LevelList.txt";
-        //int mLevelSizeNew = 8;
-        public LevelSetup()
-        {
-
-        }
-        public Cell[,] LoadLevel(int levelNumber)
+        public static Cell[,] LoadLevel(int levelNumber, string file)
         {
             Cell[,] cell = null;
             string[] lines;
             //считывание всех строк из файла уровня
             try
             {
-                lines = File.ReadAllLines(mFilename);
+                lines = File.ReadAllLines(file);
             }
             catch
             {
@@ -56,38 +50,24 @@ namespace AP_CW_Sokoban_KuryshevRV
                     currentLine = currentLine + 1 + height;
                 }
             }
-            if (cell == null)
-            {
-                /*Array.Resize(ref lines, lines.Length+ mLevelSizeNew+ 1);
-                lines[currentLine] = (currentlevelNum + 1).ToString() + " "+mLevelSizeNew.ToString()+" "+mLevelSizeNew.ToString();
-                for (int i = 0; i < mLevelSizeNew; i++)
-                {
-                    lines[currentLine + i + 1] = new string(' ',mLevelSizeNew);
-                }
-                File.WriteAllLines(mFilename, lines);
-                return LoadLevel(levelNumber);*/
-            }
             return cell;
         }
-        public void SaveLevel(int levelNumber, Cell[,] map)
+        public static void SaveLevel(int levelNumber, Cell[,] map, string file)
         {
             string[] lines;
             //считывание всех строк из файла уровня
             try
             {
-                lines = File.ReadAllLines(mFilename);
+                lines = File.ReadAllLines(file);
             }
-            catch
-            {
-                return;
-            }
+            catch { return; }
 
             int currentLine = 0;//текущая считанная строка
             int width = 0;
             int height = 0;
             int currentlevelNum;
             while (currentLine < lines.Length)
-            {
+            {//поиск нужного уровня
                 readLeverHeader(lines[currentLine], out currentlevelNum, out width, out height);
                 if (levelNumber == currentlevelNum)
                 {
@@ -131,14 +111,11 @@ namespace AP_CW_Sokoban_KuryshevRV
             };
             try
             {
-                File.WriteAllLines(mFilename, lines);
+                File.WriteAllLines(file, lines);
             }
-            catch
-            {
-                return;
-            }
+            catch { return; }
         }
-        public void readLeverHeader(string line, out int levelNumber, out int width, out int height)
+        public static void readLeverHeader(string line, out int levelNumber, out int width, out int height)
         {
             string[] parts = line.Split();
             levelNumber = 0;
@@ -152,7 +129,7 @@ namespace AP_CW_Sokoban_KuryshevRV
 
 
         }
-        public Cell CharToCell(char x)
+        public static Cell CharToCell(char x)
         {
             //возвращает ячейку в зависимости от считанного символа
             switch (x)
@@ -167,7 +144,7 @@ namespace AP_CW_Sokoban_KuryshevRV
                     return Cell.none;
             }
         }
-        public char CellToChar(Cell c)
+        public static char CellToChar(Cell c)
         {
             //возвращает символ в зависимости от ячейки
             switch (c)

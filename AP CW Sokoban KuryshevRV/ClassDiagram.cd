@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AP_CW_Sokoban_KuryshevRV.BoxSolver">
+    <Position X="7.5" Y="0.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="AP_CW_Sokoban_KuryshevRV.BoxSolver.Direction">
+        <TypeIdentifier>
+          <NewMemberFileName>BoxSolver.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="AP_CW_Sokoban_KuryshevRV.BoxSolver.Chain">
+        <TypeIdentifier>
+          <NewMemberFileName>BoxSolver.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AgAAEAAAAAAAAAQIQAAAAAgAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>BoxSolver.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AP_CW_Sokoban_KuryshevRV.LabirintWindow" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQCAQCgoAAAAABAIIiAAggABAAEAAhIAAQgAAIEAwA=</HashCode>
+      <FileName>LabirintWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AP_CW_Sokoban_KuryshevRV.LevelSetup">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAEAAAAAAAGAAAAABAAAAI=</HashCode>
+      <FileName>LevelSetup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AP_CW_Sokoban_KuryshevRV.MouseSolver">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="AP_CW_Sokoban_KuryshevRV.MouseSolver.Chain">
+        <TypeIdentifier>
+          <NewMemberFileName>MouseSolver.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AgAAEAAAAAAAAAQIQAAAABgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MouseSolver.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AP_CW_Sokoban_KuryshevRV.UserData">
+    <Position X="5.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAEAAAAAAEAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>UserData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AP_CW_Sokoban_KuryshevRV.Game">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BkAVEASAMAAAAAgABAAAQAAAAAAAQAAAAEAAEACAAAA=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Delegate Name="AP_CW_Sokoban_KuryshevRV.delegateShowItem">
+    <Position X="2.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>LabirintWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="AP_CW_Sokoban_KuryshevRV.delegateShowStats">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAgEAAAACAAAAAAAAAA=</HashCode>
+      <FileName>LabirintWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

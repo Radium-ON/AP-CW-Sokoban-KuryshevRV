@@ -121,6 +121,24 @@ namespace AP_CW_Sokoban_KuryshevRV.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Логическая игра &quot;Сокобан&quot;
+        ///Цель: с помощью фигурки игрока поставить все ящики на целевые позиции (пустой квадрат).
+        ///Передвижение клавишами стрелок или с помощью ЛКМ по нужной клетке поля.
+        ///Ящик можно только толкать.
+        ///Чтобы переместить ящик на любую клетку, выберите ящик щелчком ПКМ и клетку цели щелчком ЛКМ.
+        ///На верхней панели отображена игровая информация.
+        ///Уровень пройден, если число ящиков у цели равно числу целей.
+        ///
+        ///Курсовая работа по дисциплине &quot;Алгоритмизация и программирование&quot;
+        ///Курышева Родиона Вяч [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string HelpString {
+            get {
+                return ResourceManager.GetString("HelpString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap none {
@@ -147,6 +165,15 @@ namespace AP_CW_Sokoban_KuryshevRV.Properties {
             get {
                 object obj = ResourceManager.GetObject("SokobanStartLogo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на .
+        /// </summary>
+        internal static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
             }
         }
         

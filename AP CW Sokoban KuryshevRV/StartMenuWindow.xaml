@@ -4,11 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AP_CW_Sokoban_KuryshevRV"
-        mc:Ignorable="d"
-        Title="StartMenuWindow" Height="700" Width="800" ResizeMode="NoResize">
+        mc:Ignorable="d" Name="startWindow"
+        Title="StartMenuWindow" Height="700" Width="800" ResizeMode="NoResize" Closing="startWindow_Closing" WindowStartupLocation="CenterScreen">
     <Grid>
         <Image Name="startUpLogo" Source="pack://siteoforigin:,,,/Resources/SokobanStartLogo.png"/>
-        <Button x:Name="buttonStartGame" Content="Начать игру" Click="buttonStartGame_Click" HorizontalAlignment="Left" Margin="473,413,0,0" VerticalAlignment="Top" Width="112" Height="55" FontSize="16" Panel.ZIndex="1" IsDefault="True" FontWeight="Bold"/>
-
+        <Button x:Name="buttonStartGame" Content="Начать игру" Click="buttonStartGame_Click" HorizontalAlignment="Left" Margin="473,413,0,0" VerticalAlignment="Top" Width="112" Height="55" FontSize="16" Panel.ZIndex="1" IsDefault="True" FontWeight="Bold" Foreground="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFDA6015" Offset="0"/>
+                    <GradientStop Color="#FFC62E00" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button x:Name="btHelp" Content="?" Click="btHelp_Click"  Margin="744,10,9.6,620.4" FontWeight="Bold" FontSize="24" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="40" Width="40" MinHeight="40"/>
+        <StackPanel Margin="625,560,30,30" Panel.ZIndex="1">
+            <Button x:Name="btLoad" Content="Загрузить..." Click="btLoad_Click" Margin="5,5,5,10" FontWeight="Bold" FontSize="14" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" />
+            <Button x:Name="btHighscore" Content="Рекорды" Click="btHighscore_Click" Margin="5,5,5,10" FontWeight="Bold" FontSize="14" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+        </StackPanel>
     </Grid>
 </Window>

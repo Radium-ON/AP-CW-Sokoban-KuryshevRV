@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AP_CW_Sokoban_KuryshevRV"
-        mc:Ignorable="d"
-        Title="Лабиринт - Уровень" Height="800" Width="900" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
+        mc:Ignorable="d" Name="labirintWindow"
+        Title="Лабиринт - Уровень" Height="800" Width="900" Loaded="Window_Loaded" KeyDown="Window_KeyDown" Closing="labirintWindow_Closing" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -26,6 +26,11 @@
             <Button x:Name="buttonRestartLevel" Click="buttonRestartLevel_Click">
                 <Image Width="30" Height="30" Source="pack://siteoforigin:,,,/Resources/restart.png" Stretch="UniformToFill"/>
             </Button>
+            <Separator/>
+            <Label>Шаги:</Label>
+            <Label x:Name="lbStepsNum" Content="0"/>
+            <Label>Попытки:</Label>
+            <Label x:Name="lbAttempt" Content="{Binding AttemptNum, Mode=OneWay}"/>
         </ToolBar>
         <Grid Grid.Row="1" MaxHeight="1200" x:Name="gridGame"/>
     </Grid>

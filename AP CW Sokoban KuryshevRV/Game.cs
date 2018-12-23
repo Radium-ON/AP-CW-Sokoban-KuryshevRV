@@ -1,23 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using static AP_CW_Sokoban_KuryshevRV.App;
 
 namespace AP_CW_Sokoban_KuryshevRV
 {
-    class Game
+    [Serializable]
+    public class Game:INotifyPropertyChanged
     {
-        Cell[,] map;
-        Cell[,] itemsOnTop;//хранит ящики и персонажа поверх исходного поля
-        MapPlace userMouse;//координата клика пользователя
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+        MapPlace userPlace;//координата игрока на поле
+
         int mapWidth, mapHeight;
+
+        Cell[,] ItemsOnTop;
+        Cell[,] Map;
+        public Cell[,] TopReverse;
+
         //строка статистики
-        int placed, totals;
+        private int _placed;
+        private int _totals;
 
         delegateShowItem ShowItem;
         delegateShowStats ShowStats;
+        private int _attemptNum = 1;
+
+        public int StepsNum { get; set; } = 0;
+        public int AttemptNum
+        {
+            get{ return _attemptNum; }
+            set
+            {
+                _attemptNum = value;
+                OnPropertyChanged("AttemptNum");
+            }
+        }
+        public Game() { }
 
         public Game(delegateShowItem showItem, delegateShowStats showStats)
         {
@@ -25,48 +48,53 @@ namespace AP_CW_Sokoban_KuryshevRV
             ShowStats = showStats;
         }
 
-        public bool InitializeLevel(int levelN, out int width, out int height)
+        public bool InitializeLevel(int levelN, out int width, out int height, string file)
         {
-            LevelSetup level = new LevelSetup();
-            map = level.LoadLevel(levelN);
-            if (map == null)
+            Map = LevelSetup.LoadLevel(levelN, file);
+            if (Map == null)
             {
                 width = 0;
                 height = 0;
                 return false;
             }
-            width = mapWidth = map.GetLength(0);
-            height = mapHeight = map.GetLength(1);
-            itemsOnTop = new Cell[mapWidth, mapHeight];//изменяемое поле поверх
+            width = mapWidth = Map.GetLength(0);
+            height = mapHeight = Map.GetLength(1);
+            ItemsOnTop = new Cell[mapWidth, mapHeight];//изменяемое поле поверх
+            TopReverse = new Cell[mapWidth, mapHeight];
             for (int i = 0; i < mapWidth; i++)
                 for (int j = 0; j < mapHeight; j++)
-                {//заменяем матрицу отображения пустыми клетками, если в матрице топ есть объект
-                    switch (map[i, j])
+                {//удаляем ящики и нпс из матрицы уровня - добавляем объекты в активную матрицу
+                    switch (Map[i, j])
                     {
                         case Cell.none:
+                            TopReverse[i, j] = Cell.none;
                             break;
 
                         case Cell.wall:
+                            TopReverse[i, j] = Cell.wall;
                             break;
 
                         case Cell.box:
-                            itemsOnTop[i, j] = Cell.box;
-                            map[i, j] = Cell.none;
+                            ItemsOnTop[i, j] = Cell.box;
+                            Map[i, j] = Cell.none;
                             break;
 
                         case Cell.here:
-                            itemsOnTop[i, j] = Cell.none;
+                            TopReverse[i, j] = Cell.here;
+                            ItemsOnTop[i, j] = Cell.none;
                             break;
 
                         case Cell.done:
-                            itemsOnTop[i, j] = Cell.box;
-                            map[i, j] = Cell.here;
+                            ItemsOnTop[i, j] = Cell.box;
+                            Map[i, j] = Cell.here;
+                            TopReverse[i, j] = Cell.here;
                             break;
 
                         case Cell.user:
-                            userMouse = new MapPlace(i, j);
-                            map[i, j] = Cell.none;
-                            itemsOnTop[i, j] = Cell.user;
+                            userPlace = new MapPlace(i, j);
+                            Map[i, j] = Cell.none;
+                            TopReverse[i, j] = Cell.none;
+                            ItemsOnTop[i, j] = Cell.user;
                             break;
                     }
                 }
@@ -75,85 +103,123 @@ namespace AP_CW_Sokoban_KuryshevRV
 
         public void ShowLevel()
         {
-            placed = totals = 0;//чистая статистика перед загрузкой уровня
+            _placed = _totals = 0;//чистая статистика перед загрузкой уровня
             for (int i = 0; i < mapWidth; i++)
                 for (int j = 0; j < mapHeight; j++)
                 {
                     ShowItemMapWithTop(i, j);
-                    if (map[i, j] == Cell.here)
+                    if (Map[i, j] == Cell.here)
                     {
-                        totals++;
-                        if (itemsOnTop[i, j] == Cell.box)
+                        _totals++;
+                        if (ItemsOnTop[i, j] == Cell.box)
                         {
-                            placed++;
+                            _placed++;
                         }
                     }
                 }
-            ShowStats(placed, totals);
+            ShowStats(_placed, _totals, StepsNum);
         }
 
         private void ShowItemMapWithTop(int i, int j)
         {
-            if (itemsOnTop[i, j] == Cell.none)
-            {
-                ShowItem(new MapPlace(i, j), map[i, j]);
+            if (ItemsOnTop[i, j] == Cell.none)
+            {//назначает ресурс на ячейку
+                ShowItem(new MapPlace(i, j), Map[i, j]);
             }
             else
             {
-                if (itemsOnTop[i, j] == Cell.box && map[i, j] == Cell.here)
+                if (ItemsOnTop[i, j] == Cell.box && Map[i, j] == Cell.here)
                 {
                     ShowItem(new MapPlace(i, j), Cell.done);
                 }
                 else
                 {
-                    ShowItem(new MapPlace(i, j), itemsOnTop[i, j]);
+                    ShowItem(new MapPlace(i, j), ItemsOnTop[i, j]);
                 }
             }
+        }
+
+        public void TopToMapReverse()
+        {
+            for (int i = 0; i < mapWidth; i++)
+                for (int j = 0; j < mapHeight; j++)
+                {
+                    switch (ItemsOnTop[i, j])
+                    {
+                        case Cell.none:
+                            break;
+                        case Cell.box:
+                            if (TopReverse[i, j] == Cell.here)
+                            {
+                                TopReverse[i, j] = Cell.done;
+                            }
+                            else
+                            {
+                                TopReverse[i, j] = Cell.box;
+                            }
+                            break;
+                        case Cell.user:
+                            if (TopReverse[i, j] == Cell.here)
+                                userPlace = new MapPlace(i, j);
+                            TopReverse[i, j] = Cell.user;
+                            break;
+                    }
+                }
         }
 
         //делаем шаги юзера
         internal void UserStep(int sx, int sy)
         {
-            MapPlace place = new MapPlace(userMouse.X + sx, userMouse.Y + sy);
+            MapPlace place = new MapPlace(userPlace.X + sx, userPlace.Y + sy);
             if (!UserInRange(place))
                 return;
-            if (itemsOnTop[place.X, place.Y] == Cell.none)
+            if (ItemsOnTop[place.X, place.Y] == Cell.none)
             {
-                itemsOnTop[userMouse.X, userMouse.Y] = Cell.none; ShowItemMapWithTop(userMouse.X, userMouse.Y);
-                itemsOnTop[place.X, place.Y] = Cell.user; ShowItemMapWithTop(place.X, place.Y);
-                userMouse = place;
+                ItemsOnTop[userPlace.X, userPlace.Y] = Cell.none; ShowItemMapWithTop(userPlace.X, userPlace.Y);
+                ItemsOnTop[place.X, place.Y] = Cell.user; ShowItemMapWithTop(place.X, place.Y);
+                userPlace = place;
+                StepsNum++;//счёт шагов
             }
             //шагаем на ящик
-            if (itemsOnTop[place.X, place.Y] == Cell.box)
+            if (ItemsOnTop[place.X, place.Y] == Cell.box)
             {
                 //координаты объекта за ящиком
                 MapPlace placeAhead = new MapPlace(place.X + sx, place.Y + sy);
                 if (!UserInRange(placeAhead))
                     return;//наступить на ящик нельзя
-                if (itemsOnTop[placeAhead.X, placeAhead.Y] != Cell.none)
+                if (ItemsOnTop[placeAhead.X, placeAhead.Y] != Cell.none)
                     return;//ящик можно двигать только на пустую клетку
 
                 //двигаем ящик на цель:счётчик+ смещаем с цели:счётчик-
-                if (map[place.X, place.Y] == Cell.here) placed--;
-                if (map[placeAhead.X, placeAhead.Y] == Cell.here) placed++;
-                ShowStats(placed, totals);//обновили статус ящиков
+                if (Map[place.X, place.Y] == Cell.here) _placed--;
+                if (Map[placeAhead.X, placeAhead.Y] == Cell.here) _placed++;
 
-                itemsOnTop[userMouse.X, userMouse.Y] = Cell.none; ShowItemMapWithTop(userMouse.X, userMouse.Y);
-                itemsOnTop[place.X, place.Y] = Cell.user; ShowItemMapWithTop(place.X, place.Y);
-                itemsOnTop[placeAhead.X, placeAhead.Y] = Cell.box; ShowItemMapWithTop(placeAhead.X, placeAhead.Y);
-                userMouse = place;
+                ItemsOnTop[userPlace.X, userPlace.Y] = Cell.none; ShowItemMapWithTop(userPlace.X, userPlace.Y);
+                ItemsOnTop[place.X, place.Y] = Cell.user; ShowItemMapWithTop(place.X, place.Y);
+                ItemsOnTop[placeAhead.X, placeAhead.Y] = Cell.box; ShowItemMapWithTop(placeAhead.X, placeAhead.Y);
+                userPlace = place;
+                StepsNum++;
             }
+            ShowStats(_placed, _totals, StepsNum);//обновили статус ящиков
         }
 
         //перемещаем ящик на нужное место
         internal string SolveBox(MapPlace box, MapPlace target)
         {
-            if (itemsOnTop[box.X, box.Y] != Cell.box)
+            if (ItemsOnTop[box.X, box.Y] != Cell.box)
                 return "";
             if (!UserInRange(target))
                 return "";
-            BoxSolver solver = new BoxSolver(map, itemsOnTop);
-            return solver.MoveBox(userMouse, box, target);
+            BoxSolver solver = new BoxSolver(Map, ItemsOnTop);
+            return solver.MoveBox(userPlace, box, target);
+        }
+
+        public string SolveMouse(MapPlace target)
+        {
+            if (!UserInRange(target))
+                return "";
+            MouseSolver solver = new MouseSolver(Map, ItemsOnTop);
+            return solver.MoveMouse(userPlace, target);
         }
 
         //проверяем, что юзер вышел за лабиринт
@@ -167,23 +233,15 @@ namespace AP_CW_Sokoban_KuryshevRV
             {
                 return false;
             }
-            if (map[userPlace.X, userPlace.Y] == Cell.none)
+            if (Map[userPlace.X, userPlace.Y] == Cell.none)
             {
                 return true;
             }
-            if (map[userPlace.X, userPlace.Y] == Cell.here)
+            if (Map[userPlace.X, userPlace.Y] == Cell.here)
             {
                 return true;
             }
             return false;
-        }
-
-        public string SolveMouse(MapPlace target)
-        {
-            if (!UserInRange(target))
-                return "";
-            MouseSolver solver = new MouseSolver(map, itemsOnTop);
-            return solver.MoveMouse(userMouse, target);
         }
     }
 

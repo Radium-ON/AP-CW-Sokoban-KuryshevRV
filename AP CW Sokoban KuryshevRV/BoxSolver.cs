@@ -26,11 +26,6 @@ namespace AP_CW_Sokoban_KuryshevRV
 
         List<Direction> directionChains;//направления движения в координатах
 
-        struct PlaceMouseApple//координаты мыши и яблока
-        {
-            public MapPlace Mouse;
-            public MapPlace Apple;
-        }
         Cell[,] map;
         Cell[,] top;
         struct Chain //путь до ячейки (ребро графа)
