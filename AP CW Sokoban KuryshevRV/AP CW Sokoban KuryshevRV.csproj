@@ -38,9 +38,6 @@
     <StartupObject>AP_CW_Sokoban_KuryshevRV.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Polenter.SharpSerializer, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8f4f20011571ee5f, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpSerializer.3.0.1\lib\net452\Polenter.SharpSerializer.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -124,7 +121,6 @@
     <None Include="..\..\..\..\Documents\ClassDiagram.cd">
       <Link>ClassDiagram.cd</Link>
     </None>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

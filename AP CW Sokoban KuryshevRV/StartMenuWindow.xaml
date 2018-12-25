@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AP_CW_Sokoban_KuryshevRV"
         mc:Ignorable="d" Name="startWindow"
-        Title="StartMenuWindow" Height="700" Width="800" ResizeMode="NoResize" Closing="startWindow_Closing" WindowStartupLocation="CenterScreen">
+        Title='Логическая игра "Сокобан"' Height="700" Width="800" ResizeMode="NoResize" Closing="startWindow_Closing" WindowStartupLocation="CenterScreen">
     <Grid>
         <Image Name="startUpLogo" Source="pack://siteoforigin:,,,/Resources/SokobanStartLogo.png"/>
         <Button x:Name="buttonStartGame" Content="Начать игру" Click="buttonStartGame_Click" HorizontalAlignment="Left" Margin="473,413,0,0" VerticalAlignment="Top" Width="112" Height="55" FontSize="16" Panel.ZIndex="1" IsDefault="True" FontWeight="Bold" Foreground="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}">

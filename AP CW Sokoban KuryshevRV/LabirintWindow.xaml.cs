@@ -42,8 +42,6 @@ namespace AP_CW_Sokoban_KuryshevRV
         Game game;
         string path_target = "";//куда пойдет чел по тикам таймера
 
-        //SharpSerializer formatter;
-
         public LabirintWindow()
         {
             InitializeComponent();

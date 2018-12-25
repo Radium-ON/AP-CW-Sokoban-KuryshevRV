@@ -66,7 +66,7 @@ namespace AP_CW_Sokoban_KuryshevRV
                 if (level != 0)
                 {
                     //открытие сохранённого уровня
-                    labirint.OpenSavedLevel(level, mSaveFileName);
+                    labirint.OpenSavedLevel(level+1, mSaveFileName);
 
                 }
                 else
