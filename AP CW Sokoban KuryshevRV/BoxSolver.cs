@@ -7,27 +7,8 @@ using static AP_CW_Sokoban_KuryshevRV.App;
 
 namespace AP_CW_Sokoban_KuryshevRV
 {
-    class BoxSolver
+    class BoxSolver : GameSolver
     {
-        int width, height;
-
-        struct Direction
-        {
-            public int X, Y;
-            public string Path;
-
-            public Direction(int x, int y, string path)
-            {
-                X = x;
-                Y = y;
-                Path = path;
-            }
-        }
-
-        List<Direction> directionChains;//направления движения в координатах
-
-        Cell[,] map;
-        Cell[,] top;
         struct Chain //путь до ячейки (ребро графа)
         {
             public MapPlace Mouse;
@@ -41,20 +22,12 @@ namespace AP_CW_Sokoban_KuryshevRV
                 Path = path;
             }
         }
-        public BoxSolver(Cell[,] map, Cell[,] top)//обход направлений в MoveUser
+        public BoxSolver(Cell[,] map, Cell[,] top) : base(map,top) //обход направлений в MoveUser
         {
-            this.map = map;
-            this.top = top;
-            width = map.GetLength(0);
-            height = map.GetLength(1);
-            directionChains = new List<Direction>();
-            directionChains.Add(new Direction(-1, 0, "4"));
-            directionChains.Add(new Direction(1, 0, "6"));
-            directionChains.Add(new Direction(0, -1, "8"));
-            directionChains.Add(new Direction(0, 1, "2"));
+            
         }
 
-        public string MoveBox(MapPlace mouse, MapPlace source, MapPlace destination)
+        public override string MoveItem(MapPlace mouse, MapPlace source, MapPlace destination)
         {
             //mouse - точка мыши, сурс - исходная точка ящика, дест - назначение ящика
             if (source.X == destination.X && source.Y == destination.Y)
@@ -121,23 +94,6 @@ namespace AP_CW_Sokoban_KuryshevRV
             }
             top[source.X, source.Y] = Cell.box;
             return "NO";//решения не существует
-        }
-
-        private bool InRange(MapPlace place)//проверка позиций
-        {
-            if (place.X < 0 || place.X >= width)
-                return false;
-            if (place.Y < 0 || place.Y >= height)
-                return false;
-            if (map[place.X, place.Y] == Cell.none &&
-                (top[place.X, place.Y]==Cell.none||
-                top[place.X,place.Y]==Cell.user))
-                return true;
-            if (map[place.X, place.Y] == Cell.here &&
-                (top[place.X, place.Y] == Cell.none ||
-                top[place.X, place.Y] == Cell.user))
-                return true;
-            return false;
         }
     }
 }

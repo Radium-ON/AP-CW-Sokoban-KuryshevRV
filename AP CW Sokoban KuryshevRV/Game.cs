@@ -211,15 +211,15 @@ namespace AP_CW_Sokoban_KuryshevRV
             if (!UserInRange(target))
                 return "";
             BoxSolver solver = new BoxSolver(Map, ItemsOnTop);
-            return solver.MoveBox(userPlace, box, target);
+            return solver.MoveItem(userPlace, box, target);
         }
 
         public string SolveMouse(MapPlace target)
         {
             if (!UserInRange(target))
                 return "";
-            MouseSolver solver = new MouseSolver(Map, ItemsOnTop);
-            return solver.MoveMouse(userPlace, target);
+            UserSolver solver = new UserSolver(Map, ItemsOnTop);
+            return solver.MoveItem(userPlace,new MapPlace(0,0),target);
         }
 
         //проверяем, что юзер вышел за лабиринт
