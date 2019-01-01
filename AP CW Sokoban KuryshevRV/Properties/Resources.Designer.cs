@@ -170,9 +170,9 @@ namespace AP_CW_Sokoban_KuryshevRV.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap user_black {
+        internal static System.Drawing.Bitmap user {
             get {
-                object obj = ResourceManager.GetObject("user_black", resourceCulture);
+                object obj = ResourceManager.GetObject("user", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

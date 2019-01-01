@@ -104,7 +104,7 @@ namespace AP_CW_Sokoban_KuryshevRV
                 case Cell.box: return new Uri(@"pack://siteoforigin:,,,/Resources/box.png");
                 case Cell.here: return new Uri(@"pack://siteoforigin:,,,/Resources/checkbox_blank_outline.png");
                 case Cell.done: return new Uri(@"pack://siteoforigin:,,,/Resources/checkbox_marked_outline.png");
-                case Cell.user: return new Uri(@"pack://siteoforigin:,,,/Resources/user_black.png");
+                case Cell.user: return new Uri(@"pack://siteoforigin:,,,/Resources/user.png");
                 default: return new Uri(@"pack://siteoforigin:,,,/Resources/none.png");
             }
         }
@@ -138,15 +138,16 @@ namespace AP_CW_Sokoban_KuryshevRV
             gridGame.ColumnDefinitions.Clear();
             for (int x = 0; x < width; x++)
             {
-                gridGame.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1,GridUnitType.Star) });
+                gridGame.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(.1,GridUnitType.Star) });
                 for (int y = 0; y < height; y++)
                 {
-                    gridGame.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
+                    gridGame.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(.1, GridUnitType.Star) });
                     Image pic = new Image()
                     {
                         Stretch = Stretch.UniformToFill,
                         //запись координат в тэг ячейки
                         Tag = new MapPlace(x, y),
+                        SnapsToDevicePixels=true,
                     };
                     pic.MouseLeftButtonDown += new MouseButtonEventHandler(ImageCell_MouseLeftButtonDown);
                     pic.MouseRightButtonDown += new MouseButtonEventHandler(ImageCell_MouseRightButtonDown);

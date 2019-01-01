@@ -7,7 +7,7 @@
         mc:Ignorable="d" Name="startWindow"
         Title='Логическая игра "Сокобан"' Height="700" Width="800" ResizeMode="NoResize" Closing="startWindow_Closing" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Image Name="startUpLogo" Source="pack://siteoforigin:,,,/Resources/SokobanStartLogo.png"/>
+        <Image Name="startUpLogo" Source="pack://siteoforigin:,,,/Resources/SokobanStartLogo.png" SnapsToDevicePixels="True"/>
         <Button x:Name="buttonStartGame" Content="Начать игру" Click="buttonStartGame_Click" HorizontalAlignment="Left" Margin="473,413,0,0" VerticalAlignment="Top" Width="112" Height="55" FontSize="16" Panel.ZIndex="1" IsDefault="True" FontWeight="Bold" Foreground="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

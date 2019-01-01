@@ -151,11 +151,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\user_black.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="bin\Debug\Resources\check-circle-outline.png" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\checkbox_marked_outline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

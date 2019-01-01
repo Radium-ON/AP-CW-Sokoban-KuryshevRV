@@ -11,7 +11,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ToolBar x:Name="toolBar" MinHeight="30" VerticalAlignment="Top" Background="White">
+        <ToolBar x:Name="toolBar" MinHeight="30" VerticalAlignment="Top" Background="White" ToolBarTray.IsLocked="True">
             <Label Content="Уровень № "/>
             <Label x:Name="levelNumberLevel"/>
             <Separator/>
@@ -32,7 +32,7 @@
             <Label>Попытки:</Label>
             <Label x:Name="lbAttempt" Content="{Binding AttemptNum, Mode=OneWay}"/>
         </ToolBar>
-        <Grid x:Name="gridGame" Grid.Row="1" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=Size.ActualHeight}" 
-              Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=Size.ActualHeigh}"/>
+        <Grid x:Name="gridGame" Grid.Row="1" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:LabirintWindow}}, Path=Size.ActualHeight}" 
+              Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:LabirintWindow}}, Path=Size.ActualWidth}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>
 </Window>
